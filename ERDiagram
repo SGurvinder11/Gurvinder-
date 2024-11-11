@@ -1,0 +1,60 @@
+CREATE DATABASE UniversityDB;
+USE UniversityDB;
+CREATE TABLE Person (
+    PersonID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Email VARCHAR(100),
+    Phone VARCHAR(15)
+);
+
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,
+    DateOfBirth DATE,
+    FOREIGN KEY (StudentID) REFERENCES Person(PersonID) ON DELETE CASCADE
+);
+
+CREATE TABLE Instructor (
+    InstructorID INT PRIMARY KEY,
+    FOREIGN KEY (InstructorID) REFERENCES Person(PersonID) ON DELETE CASCADE
+);
+
+CREATE TABLE Department (
+    DepartmentID INT PRIMARY KEY AUTO_INCREMENT,
+    DepartmentName VARCHAR(100),
+    Location VARCHAR(100)
+);
+
+CREATE TABLE Course (
+    CourseID INT PRIMARY KEY AUTO_INCREMENT,
+    CourseName VARCHAR(100),
+    Credits INT,
+    DepartmentID INT,
+    FOREIGN KEY (DepartmentID) REFERENCES Department(DepartmentID) ON DELETE SET NULL
+);
+
+CREATE TABLE Enrollment (
+    EnrollmentID INT PRIMARY KEY AUTO_INCREMENT,
+    StudentID INT,
+    CourseID INT,
+    Grade CHAR(1),
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID) ON DELETE CASCADE,
+    FOREIGN KEY (CourseID) REFERENCES Course(CourseID) ON DELETE CASCADE,
+    UNIQUE (StudentID, CourseID)  -- Composite key constraint
+);
+
+CREATE TABLE Assignment (
+    AssignmentID INT PRIMARY KEY AUTO_INCREMENT,
+    Title VARCHAR(100),
+    DueDate DATE,
+    CourseID INT,
+    FOREIGN KEY (CourseID) REFERENCES Course(CourseID) ON DELETE CASCADE
+);
+
+CREATE TABLE Teaches (
+    InstructorID INT,
+    CourseID INT,
+    PRIMARY KEY (InstructorID, CourseID),
+    FOREIGN KEY (InstructorID) REFERENCES Instructor(InstructorID) ON DELETE CASCADE,
+    FOREIGN KEY (CourseID) REFERENCES Course(CourseID) ON DELETE CASCADE
+);
